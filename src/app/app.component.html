@@ -1,20 +1,254 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<nav class="grey lighten-3">
+  <div class="nav-wrapper">
+    <a href="#" class="brand-logo center">
+      VIG COIN
+    </a>
 
+  </div>
+</nav>
+
+<div class="row">&nbsp;</div>
+<div class="row center-align">
+  <div class="col s12">
+    <h4 style="color: #555;" title="Offline wallet generator">离线钱包生成器</h4>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col s12">
+    <p>
+      这个页面用于生成
+      <select onchange="js:setCoin(this.selectedIndex);" class="waves-effect waves-light btn coin" style="max-width: 20%">
+        <option>VIG</option>
+        <option>Monero</option>
+        <option>Aeon</option>
+      </select>
+      钱包. 这个页面包含了所有相关的计算代码，所以也可以在没有网络的环境里生成钱包。这样你的密钥就可以完全没有安全风险了。 当前页面的新版本代码可以在这里找到：
+      <a href="https://github.com/vigcoin/paper-wallet.git">这里</a>.
+    </p>
+    <pre>
+        钱包包含了三个部分：
+        1、钱包地址： 用于公开接收第三方的交易
+        2、记忆种子：用于生成消费私钥与查看私钥
+        3、生成消费私钥与查看私钥：用于方便开发使用
+
+        当页面打开时，新的地址已经生成。你可以直接使用当前的地址，也可以点击[生成新钱包]按钮重新生成。
+      </pre>
+  </div>
+</div>
+<div class="row valign-wrapper">
+  <div class="col s4 right-align ">
+    <input class="btn orange" type="button" onclick="js:genwallet(null);" value="生成新钱包" id="gen_with_custom_entropy_button" action=""
+    />
+    <!-- <p>Custom entropy for deterministic wallet (leave empty to use the browser's PRNG)</p> -->
+    <input type="text" value="" id="user_entropy_widget" oninput="js:checkEntropy();" />
+    <div style="color: red; display: none" id="user_entropy_warning_widget">WARNING: entropy is way too low for the wallet to be secure: aim for 256 bits (about a hundred dice throws)</div>
+  </div>
+  <div class="col s1 offset-s1">
+    <h4>或</h4>
+  </div>
+  <div class="col s5 offset-s1">
+    <form>
+      <input class="btn deep-orange" type="button" onclick="js:genwallet_prefix();" disabled value="生成带前缀的钱包" action="" id="gen_prefix_widget"
+      />
+      <!-- <p>(very slow for more than a few characters)</p> -->
+      <input type="text" value="B" id="prefix_widget" oninput="js:check_prefix_validity()" />
+    </form>
+  </div>
+</div>
+<div class="row center-align">
+  <div class="col s12">
+    <form>
+      <!-- <input class="waves-effect waves-light btn" type="button" onclick="js:genwallet('english');" value="英语" action="" id=lang_en /> -->
+      <!-- <input class="waves-effect waves-light btn" type="button" onclick="js:genwallet('spanish');" value="西班牙语" action="" id=lang_es /> -->
+      <!-- portuguese word list has a few prefix collisions
+                        <input type="button" onclick="js:genwallet('portuguese');" value="Portuguese" action=""/ id=lang_pt>
+                  -->
+      <!-- <input class="waves-effect waves-light btn" type="button" onclick="js:genwallet('japanese');" value="日语" action="" id=lang_jp /> -->
+      <!-- <br/> -->
+      <!-- <font size="-1">(restoring non English language seeds needs a recent simplewallet)</font> -->
+    </form>
+  </div>
+</div>
+<div class="row">
+  <div class="col s12">
+    <div class="card light-green lighten-5">
+      <div class="card-content light-green-text text-darken-4">
+        <span class="card-title light-green-text text-darken-4">
+          钱包地址
+          <input type="button" class="waves-effect waves-light btn" onclick="js:toggle_qr();" value="显示二维码" action="" style="line-height: 25px; height: 25px; font-size: 60%; padding: 0px 1.5rem;"
+            id="show_qr_code" />
+        </span>
+
+        <p>这是你给第三方用于发送VIG给你的地址。
+          <br/>
+          <b>是这里唯一可以公开的信息。</b>
+        </p>
+      </div>
+      <div class="card-action center-align">
+        <pre class="center-align" id="address_widget">生成中...</pre>
+        <span class="qrcode" id="address_qr_widget" onclick="js:toggle_qr();"></span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col s12">
+    <div class="card pink lighten-5">
+      <div class="card-content pink-text text-darken-5">
+        <span class="card-title pink-text text-darken-5">记忆种子</span>
+        <p>
+          记忆种子是一个由一些单词组成的字符串，用于帮助你重新生成私有密钥。
+          <!-- The mnemonic seed is a string that comprises 24 (Aeon) or 25 (Monero) words and allows you to recreate your private keys. -->
+          <b>请秘密保存好!</b>
+        </p>
+      </div>
+      <div class="card-action center-align">
+        <h5 class="grey-text text-darken-4" id="mnemonic_widget">生民... </h5>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col s12">
+    <div class="card indigo lighten-5">
+      <div class="card-content indigo-text text-darken-5">
+        <span class="card-title indigo-text text-darken-5">私钥(可选)</span>
+
+        <p>
+          消费私钥(spend key)和查看私钥(view key)是新钱包的原生私钥。
+          <b>它们放在这里主要作为信息提供给你使用的，因为它们是可以使用上面的记忆种子(mnemonic seed)恢复的。</b>如果你保存它们，一定要确保安全。
+        </p>
+        <br/>
+        <table class="card-action">
+          <tbody>
+            <tr>
+              <td>
+                <pre>消费私钥(Spend key):</pre>
+              </td>
+              <td>
+                <pre id="spend_key_widget">生成中...</pre>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <pre>查看私钥(View key):</pre>
+              </td>
+              <td>
+                <pre id="view_key_widget">生成中...</pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">&nbsp;</div>
+<footer class="page-footer grey lighten-3 grey-text text-darken-4">
+  <div class="container">
+    <div class="row">
+      <div class="col s12">
+        <h5>Credits</h5>
+        <p>
+          Made by moneromooo, based on code from
+          <a href="https://mymonero.com/">MyMonero</a>. Copyright notices in the source.
+          <br/> Thanks to antanst for the CSS, and to luigi1111 for crypto fixes and improvements.
+          <br/> If you found this useful, a donation would be appreciated:
+          <br/>
+          <pre>Monero: 4AfUP827TeRZ1cck3tZThgZbRCEwBrpcJTkA1LCiyFVuMH4b5y59bKMZHGb9y58K3gSjWDCBsB4RkGsGDhsmMG5R2qmbLeW</pre>
+          <br/>
+          <pre>Aeon: WmtXcFZj5iGY21JxAtFsJVQmQQyo7jgoJP8V4zLWVzDeeTfvbP8Mzb5gbNpQEc6BkeUYUqjGntHDSDyA6LKjdGBQ1w9iEpfVw
+          </pre>
+
+          <br/> Thanks, and welcome to Monero!
+          <h5 id="gpg-instructions">How to verify GPG signatures</h5>
+
+          <p>
+            All released versions of this page will be GPG signed by moneromooo, to avoid trojaned versions being passed around. It is
+            in your interest to check the signature.
+          </p>
+          <p>
+            This page is maintained as a
+            <a href="https://github.com/moneromooo-monero/monero-wallet-generator/">git repository</a>. All commits are signed. In addition, released versions of the page are signed separately.
+            In order to check either, you first need to import
+            <a href="https://raw.githubusercontent.com/monero-project/bitmonero/master/utils/gpg_keys/moneromooo.asc">moneromooo's GPG key</a>
+            from the Monero source tree:
+          </p>
+
+          <code>
+            gpg --import moneromooo.asc
+          </code>
+
+          <h5>Checking a standalone signature</h5>
+
+          <p>
+            You need to get the signature file corresponding to the version of the page you're using. Original signature files are
+            <a href="https://raw.githubusercontent.com/moneromooo-monero/monero-wallet-generator/master/monero-wallet-generator.html.asc">in the git repository</a>
+            as well. Save it as monero-wallet-generator.html.asc, then:
+          </p>
+
+          <code>
+            gpg --verify monero-wallet-generator.html.asc
+          </code>
+
+          <p>
+            You should see a message similar to:
+          </p>
+
+          <code>
+            gpg: Good signature from "moneromooo-monero &lt;moneromooo-monero@users.noreply.github.com&gt;"
+          </code>
+
+          <p>
+            Check the signature is from the key you imported previously! If not, you may be checking that file was properly signed by
+            an attacker instead of moneromooo. Beware that anyone can place any email address in a new GPG key, so the right
+            email being shown is no guarantee.
+          </p>
+
+          <p>
+            NOTE: you will probably also see a warning like this:
+          </p>
+
+          <code>
+            gpg: WARNING: This key is not certified with a trusted signature!
+          </code>
+
+          <p>
+            That is expected, as you only told GPG to import the signature in the steps above, but not to trust it. Look for tutorials
+            on GPG if you want to do this, but it is not necessary here.
+          </p>
+
+          <p>
+            If you want to verify an old version of the file, you will have to retrieve the matching signature file from git.
+          </p>
+
+          <h5>Checking a git commit's signature</h5>
+
+          <p>
+            If you're using git to get the latest and greatest, it's even simpler:
+          </p>
+
+          <code>
+            git show --show-signature
+          </code>
+
+          <p>
+            You should see a message similar to:
+          </p>
+
+          <code>
+            gpg: Good signature from "moneromooo-monero &lt;moneromooo-monero@users.noreply.github.com&gt;"
+          </code>
+
+          <p>
+            Check the signature is from the key you imported previously! If not, you may be checking that file was properly signed by
+            an attacker instead of moneromooo. Beware that anyone can place any email address in a new GPG key, so the right
+            email being shown is no guarantee.
+          </p>
+      </div>
+    </div>
+  </div>
+</footer>

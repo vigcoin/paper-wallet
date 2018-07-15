@@ -1,1 +1,29 @@
 /* You can add global styles to this file, and also import other style files */
+
+html {
+  line-height: 1.3;
+}
+
+.private {
+  background-color: #FF8080
+}
+
+.public {
+  background-color: #80FF80
+}
+
+.card {
+  margin: 0.5rem 0px 0.5rem !important;
+}
+
+.card .card-content {
+  padding: 10px !important;
+}
+
+.row {
+  margin-bottom: 10px !important;
+}
+
+pre {
+  margin: 0px;
+}
