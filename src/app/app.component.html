@@ -1,157 +1,115 @@
-<nav class="grey lighten-3">
-  <div class="nav-wrapper">
-    <a href="https://vigcoin.org" class="brand-logo center" target="_blank">
-      VIG COIN
-    </a>
-
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand">VIG COIN</a>
+  <div class="collapse navbar-collapse" i>
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="https://vigcoin.org">返回官网 <span class="sr-only">(current)</span></a>
+      </li>
+    </ul>
   </div>
 </nav>
 
-<div class="row">&nbsp;</div>
-<div class="row center-align">
-  <div class="col s12">
-    <h4 style="color: #555;" title="Offline wallet generator">离线钱包生成器</h4>
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+      <br />
+      <h1 class="h1 text-center text-danger" title="Offline wallet generator">VIG COIN纸钱包生成器</h1>
+      <hr />
+    </div>
   </div>
 </div>
 
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+      <h1 class="text-secondary">欢迎使用VIG COIN钱包.</h1>
+      <p>
+        这个页面用于生成VIG COIN钱包. 这个页面包含了所有相关的计算代码，所以也可以在没有网络的环境里生成钱包。这样你的密钥就可以完全没有安全风险了。 当前页面的新版本代码可以在这里找到：
+        <a href="https://github.com/vigcoin/paper-wallet.git">这里</a>.
+      </p>
+    </div>
+    <div class="col-sm">
+      <h1 class="text-secondary">钱包包含了三个部分</h1>
 
-<div class="row">
-  <div class="col s12">
-    <p>
-      这个页面用于生成
-      <select onchange="js:setCoin(this.selectedIndex);" class="waves-effect waves-light btn coin" style="max-width: 20%">
-        <option>VIG</option>
-        <option>Monero</option>
-        <option>Aeon</option>
-      </select>
-      钱包. 这个页面包含了所有相关的计算代码，所以也可以在没有网络的环境里生成钱包。这样你的密钥就可以完全没有安全风险了。 当前页面的新版本代码可以在这里找到：
-      <a href="https://github.com/vigcoin/paper-wallet.git">这里</a>.
-    </p>
-    <pre>
-        钱包包含了三个部分：
-        1、钱包地址： 用于公开接收第三方的交易
-        2、记忆种子：用于生成消费私钥与查看私钥
-        3、生成消费私钥与查看私钥：用于方便开发使用
-
+      <div>
+        <ol>
+          <li>钱包地址： 用于公开接收第三方的交易</li>
+          <li>记忆种子：用于生成消费私钥与查看私钥</li>
+          <li>生成消费私钥与查看私钥：用于方便开发使用</li>
+        </ol>
         当页面打开时，新的地址已经生成。你可以直接使用当前的地址，也可以点击[生成新钱包]按钮重新生成。
-      </pre>
-  </div>
-</div>
-<div class="row valign-wrapper">
-  <div class="col s4 right-align ">
-    <input class="btn orange" type="button" onclick="js:genwallet(null);" value="生成新钱包" id="gen_with_custom_entropy_button" action=""
-    />
-    <!-- <p>Custom entropy for deterministic wallet (leave empty to use the browser's PRNG)</p> -->
-    <input type="text" value="" id="user_entropy_widget" oninput="js:checkEntropy();" />
-    <div style="color: red; display: none" id="user_entropy_warning_widget">WARNING: entropy is way too low for the wallet to be secure: aim for 256 bits (about a hundred dice throws)</div>
-  </div>
-  <div class="col s1 offset-s1">
-    <h4>或</h4>
-  </div>
-  <div class="col s5 offset-s1">
-    <form>
-      <input class="btn deep-orange" type="button" onclick="js:genwallet_prefix();" disabled value="生成带前缀的钱包" action="" id="gen_prefix_widget"
-      />
-      <!-- <p>(very slow for more than a few characters)</p> -->
-      <input type="text" value="B" id="prefix_widget" oninput="js:check_prefix_validity()" />
-    </form>
-  </div>
-</div>
-<div class="row center-align">
-  <div class="col s12">
-    <form>
-      <!-- <input class="waves-effect waves-light btn" type="button" onclick="js:genwallet('english');" value="英语" action="" id=lang_en /> -->
-      <!-- <input class="waves-effect waves-light btn" type="button" onclick="js:genwallet('spanish');" value="西班牙语" action="" id=lang_es /> -->
-      <!-- portuguese word list has a few prefix collisions
-                        <input type="button" onclick="js:genwallet('portuguese');" value="Portuguese" action=""/ id=lang_pt>
-                  -->
-      <!-- <input class="waves-effect waves-light btn" type="button" onclick="js:genwallet('japanese');" value="日语" action="" id=lang_jp /> -->
-      <!-- <br/> -->
-      <!-- <font size="-1">(restoring non English language seeds needs a recent simplewallet)</font> -->
-    </form>
-  </div>
-</div>
-<div class="row">
-  <div class="col s12">
-    <div class="card light-green lighten-5">
-      <div class="card-content light-green-text text-darken-4">
-        <span class="card-title light-green-text text-darken-4">
-          钱包地址
-          <input type="button" class="waves-effect waves-light btn" onclick="js:toggle_qr();" value="显示二维码" action="" style="line-height: 25px; height: 25px; font-size: 60%; padding: 0px 1.5rem;"
-            id="show_qr_code" />
-        </span>
-
-        <p>这是你给第三方用于发送VIG给你的地址。
-          <br/>
-          <b>是这里唯一可以公开的信息。</b>
-        </p>
-      </div>
-      <div class="card-action center-align">
-        <pre class="center-align" id="address_widget">生成中...</pre>
-        <span class="qrcode" id="address_qr_widget" onclick="js:toggle_qr();"></span>
       </div>
     </div>
   </div>
-</div>
-<div class="row">
-  <div class="col s12">
-    <div class="card pink lighten-5">
-      <div class="card-content pink-text text-darken-5">
-        <span class="card-title pink-text text-darken-5">记忆种子</span>
-        <p>
-          记忆种子是一个由一些单词组成的字符串，用于帮助你重新生成私有密钥。
-          <!-- The mnemonic seed is a string that comprises 24 (Aeon) or 25 (Monero) words and allows you to recreate your private keys. -->
-          <b>请秘密保存好!</b>
-        </p>
-      </div>
-      <div class="card-action center-align">
-        <h5 class="grey-text text-darken-4" id="mnemonic_widget">生民... </h5>
-      </div>
+  <div class="row">
+    <div class="col-sm">
+      <hr />
+      <h1 class="text-center">
+        <input class="btn btn-primary" type="button" onclick="js:genwallet(null);" value="生成新钱包"
+          id="gen_with_custom_entropy_button" action="" />
+        <input type="hidden" value="" id="user_entropy_widget" oninput="js:checkEntropy();" />
+      </h1>
+    </div>
+    <div class="col-sm">
+      <hr />
+
+      <form action="{{url}}" method="POST" target="_blank" (ngSubmit)="onSubmit($event)">
+        <h1 class="text-center">
+          <input type="hidden" class="form-control hidden" [(ngModel)]="spend" name="spend" />
+          <input type="hidden" class="form-control hidden" [(ngModel)]="view" name="view" />
+          <button class="btn btn-primary" type="submit" *ngIf="spend; else elseBlock">下载钱包</button>
+          <ng-template #elseBlock><button class="btn btn-warning" type="button" disabled>正在生成新钱包...</button>
+          </ng-template>
+
+        </h1>
+      </form>
+    </div>
+  </div>
+  <hr />
+  <div class="alert alert-success" role="alert">
+    <h1 class="h1 text-center" title="Offline wallet generator">请把下面的绿色部分都保存好！！！</h1>
+  </div>
+  <div class="row">
+    <div class="col-sm">
+      <hr />
+      <h3 class="text-primary">私钥(必须保存起来)</h3>
+      <hr />
+      <p> 消费私钥(spend key)和查看私钥(view key)是生成钱包用的。
+        <b>请一定要确保安全，并不能让其他人知道。</b>
+      </p>
+      <p class="text-primary">消费私钥(Spend key): <br /><span class="text-success" id="spend_key_widget">生成中...</span></p>
+      <p class="text-primary">查看私钥(View key): <br /><span class="text-success" id="view_key_widget">生成中...</span></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm">
+      <hr />
+      <h3 class="text-primary">钱包地址</h3>
+      <hr />
+      <p>这是你给第三方用于发送VIG给你的地址,是这里唯一可以公开的信息。</p>
+      <p class="text-success" id="address_widget">生成中...</p>
+      <p class="qrcode hidden" id="address_qr_widget" onclick="js:toggle_qr();"></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm">
+      <hr />
+      <h3 class="text-primary">记忆种子</h3>
+      <hr />
+      <p>记忆种子是一个由一些单词组成的字符串，用于帮助你重新生成私有密钥。
+        <!-- The mnemonic seed is a string that comprises 24 (Aeon) or 25 (Monero) words and allows you to recreate your private keys. -->
+        <b>请秘密保存好!</b></p>
+      <p class="text-success" id="mnemonic_widget">生成中...</p>
     </div>
   </div>
 </div>
-<div class="row">
-  <div class="col s12">
-    <div class="card indigo lighten-5">
-      <div class="card-content indigo-text text-darken-5">
-        <span class="card-title indigo-text text-darken-5">私钥(可选)</span>
-
-        <p>
-          消费私钥(spend key)和查看私钥(view key)是新钱包的原生私钥。
-          <b>它们放在这里主要作为信息提供给你使用的，因为它们是可以使用上面的记忆种子(mnemonic seed)恢复的。</b>如果你保存它们，一定要确保安全。
-        </p>
-        <br/>
-        <table class="card-action">
-          <tbody>
-            <tr>
-              <td>
-                <pre>消费私钥(Spend key):</pre>
-              </td>
-              <td>
-                <pre id="spend_key_widget">生成中...</pre>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <pre>查看私钥(View key):</pre>
-              </td>
-              <td>
-                <pre id="view_key_widget">生成中...</pre>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="row">&nbsp;</div>
-<footer class="page-footer grey lighten-3 grey-text text-darken-4">
+<footer>
   <div class="container">
     <div class="row">
-      <div class="col s12">
-        <h5>Credits</h5>
+      <div class="col-sm">
+        <br />
+        <h2>Credits</h2>
         <p>
           Made by calidion, based on code from
           <a href="https://moneroaddress.org/">moneroaddress</a>. Copyright notices in the source.
