@@ -13,7 +13,7 @@ import { map } from 'rxjs//operators';
 export class AppComponent implements OnInit, OnDestroy {
   spend: string;
   view: string;
-  url = 'http://127.0.0.1:8080/wallet/export';
+  url = 'http://webapi.vigcoin.org:8080/wallet/export';
   id;
 
   constructor(private http: HttpClient) {
